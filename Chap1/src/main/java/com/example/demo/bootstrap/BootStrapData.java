@@ -13,49 +13,57 @@ import com.example.demo.repository.PublisherRepository;
 @Component
 public class BootStrapData implements CommandLineRunner {
 	
-	private final AuthorRepository authorRepo;
-	private final BookRepository bookRepo;
-	private final PublisherRepository pubRepo;
+	private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
 
-	public BootStrapData(AuthorRepository authorRepo, BookRepository bookRepo, PublisherRepository pubRepo) {
-		super();
-		this.authorRepo = authorRepo;
-		this.bookRepo = bookRepo;
-		this.pubRepo = pubRepo;
+    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
+        this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
+    }
 
-	}
+    @Override
+    public void run(String... args) throws Exception {
 
-	@Override
-	public void run(String... args) throws Exception {
-		Author eric = new Author("Eric", "Evans");
+        System.out.println("Started in Bootstrap");
+
+        Publisher publisher = new Publisher();
+        publisher.setName("SFG Publishing");
+        publisher.setCity("St Petersburg");
+        publisher.setState("FL");
+
+        publisherRepository.save(publisher);
+
+        System.out.println("Publisher Count: " + publisherRepository.count());
+
+        Author eric = new Author("Eric", "Evans");
         Book ddd = new Book("Domain Driven Design", "123123");
         eric.getBooks().add(ddd);
         ddd.getAuthors().add(eric);
 
-        authorRepo.save(eric);
-        bookRepo.save(ddd);
+        ddd.setPublisher(publisher);
+        publisher.getBooks().add(ddd);
+
+        authorRepository.save(eric);
+        bookRepository.save(ddd);
+        publisherRepository.save(publisher);
 
         Author rod = new Author("Rod", "Johnson");
         Book noEJB = new Book("J2EE Development without EJB", "3939459459");
         rod.getBooks().add(noEJB);
         noEJB.getAuthors().add(rod);
 
-        authorRepo.save(rod);
-        bookRepo.save(noEJB);
-        
-        // Create POJO Publisher
-        
-        Publisher pub1 = new Publisher();
+        noEJB.setPublisher(publisher);
+        publisher.getBooks().add(noEJB);
 
-        pub1.setName("Long Nguyen");
-        pub1.setAddress("1968 Anton Way");
-        
-        pubRepo.save(pub1);
-        
-        System.out.println("Started in Bootstrap");
-        System.out.println("Number of Books: " + bookRepo.count());
-        System.out.println("Publisher: " + pubRepo.count());
-	}
+        authorRepository.save(rod);
+        bookRepository.save(noEJB);
+        publisherRepository.save(publisher);
+
+        System.out.println("Number of Books: " + bookRepository.count());
+        System.out.println("Publisher Number of Books: " + publisher.getBooks().size());
+    }
 
 }
 
