@@ -23,11 +23,9 @@ public class Book {
 				inverseJoinColumns = @JoinColumn(name="author_id"))
 	private Set<Author> authors;
 	
-	public Book(String title, String isbn, Set<Author> authors) {
-		super();
+	public Book(String title, String isbn) {
 		this.title = title;
 		this.isbn = isbn;
-		this.authors = authors;
 	}
 	public Book() {
 		
@@ -56,6 +54,33 @@ public class Book {
 	}
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Id == null) ? 0 : Id.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		if (Id == null) {
+			if (other.Id != null)
+				return false;
+		} else if (!Id.equals(other.Id))
+			return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return "Book [Id=" + Id + ", title=" + title + ", isbn=" + isbn + ", authors=" + authors + "]";
 	}
 	
 }
